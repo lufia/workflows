@@ -24,14 +24,14 @@ jobs:
     - uses: actions/setup-go@v3
       with:
         go-version: ${{ matrix.go }}
-    - run: go test -race -covermode=atomic -coverprofile=prof.out
+    - run: go test -race -covermode=atomic -coverprofile=prof.out ./...
       shell: bash
     - uses: shogo82148/actions-goveralls@v1
       with:
         github-token: ${{ secrets.github-token }}
         path-to-profile: prof.out
         parallel: true
-        job-number: ${{ strategy.job-index }}
+        flag-name: ${{ matrix.os }}_go${{ matrix.go }}
   finish:
     needs: test
     runs-on: ubuntu-latest
