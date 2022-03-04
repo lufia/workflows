@@ -5,6 +5,7 @@ on:
     secrets:
       github-token:
         required: true
+        default: '${{ github.token }}'
 
 jobs:
   test:
