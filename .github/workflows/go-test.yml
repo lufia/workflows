@@ -2,10 +2,6 @@ name: Test(Go)
 
 on:
   workflow_call:
-    secrets:
-      github-token:
-        required: true
-        default: '${{ github.token }}'
 
 jobs:
   test:
@@ -29,7 +25,7 @@ jobs:
       shell: bash
     - uses: shogo82148/actions-goveralls@v1
       with:
-        github-token: ${{ secrets.github-token }}
+        github-token: ${{ github.token }}
         path-to-profile: prof.out
         parallel: true
         flag-name: ${{ matrix.os }}_go${{ matrix.go }}
@@ -39,5 +35,5 @@ jobs:
     steps:
     - uses: shogo82148/actions-goveralls@v1
       with:
-        github-token: ${{ secrets.github-token }}
+        github-token: ${{ github.token }}
         parallel-finished: true
