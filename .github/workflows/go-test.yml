@@ -2,13 +2,26 @@ name: Test(Go)
 
 on:
   workflow_call:
+    # For now, inputs supports only three types: 'boolean', 'number' or 'string'.
+    # workaround: https://github.com/orgs/community/discussions/11692#discussioncomment-3541856
+    inputs:
+      os-versions:
+        description: 'Stringfied JSON object listing GitHub-hosted runnners'
+        default: '["ubuntu-22.04", "windows-2022", "macos-12"]'
+        required: false
+        type: string
+      go-versions:
+        description: 'Stringfied JSON object listing target Go versions'
+        default: '["1.20.x", "1.19.x"]'
+        required: false
+        type: string
 
 jobs:
   test:
     strategy:
       matrix:
-        os: ['ubuntu-22.04', 'windows-2022', 'macos-12']
-        go: ['1.20.x', '1.19.x']
+        os: ${{ fromJson(inputs.os-versions) }}
+        go: ${{ fromJson(inputs.go-versions) }}
     runs-on: ${{ matrix.os }}
     steps:
     - uses: actions/checkout@v3
