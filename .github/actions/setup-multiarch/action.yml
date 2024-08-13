@@ -1,0 +1,45 @@
+name: Setup multiarch
+description: Setup multiarch build environment.
+inputs:
+  arch:
+    description: |
+      The architecture of the build target.
+      Available targets:
+      - amd64
+      - arm64
+      - armhf
+      - i386
+      - ppc64el
+      - riscv64
+      - s390x
+    required: true
+  components:
+    description: The Ubuntu components that is spearated by space
+    required: true
+    default: main restricted
+
+runs:
+  using: composite
+  steps:
+  - name: Add an architecture to install packages
+    run: |
+      source /etc/lsb-release
+      codename="$DISTRIB_CODENAME"
+      url='http://ports.ubuntu.com/ubuntu-ports'
+      if [[ $ARCH = amd64 ]] || [[ $ARCH = i386 ]]
+      then
+        exit 0
+      fi
+
+      sudo dpkg --add-architecture "$ARCH"
+      sudo sed -i -E '/^deb(-src)? ([^[])/s/ / [arch=amd64,i386] /' /etc/apt/sources.list
+
+      o="$(mktemp)"
+      echo "deb [arch=$ARCH] $url $codename $LIST" >>"$o"
+      echo "deb [arch=$ARCH] $url $codename-security $LIST" >>"$o"
+      echo "deb [arch=$ARCH] $url $codename-updates $LIST" >>"$o"
+      sudo install -m 644 "$o" "/etc/apt/sources.list.d/multiarch-$ARCH.list"
+    env:
+      ARCH: ${{ inputs.arch }}
+      LIST: ${{ inputs.components }}
+    shell: bash
