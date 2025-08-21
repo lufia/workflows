@@ -44,7 +44,7 @@ runs:
 
   # The secrets context is not available for composite actions.
   # https://docs.github.com/en/actions/learn-github-actions/contexts#secrets-context
-  - uses: actions/upload-artifact@v4
+  - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
     with:
       name: ${{ env.ASSET_NAME }}
       path: ${{ env.ASSET_NAME }}
