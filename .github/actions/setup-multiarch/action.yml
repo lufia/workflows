@@ -33,6 +33,16 @@ runs:
 
       sudo dpkg --add-architecture "$ARCH"
       sudo sed -i -E '/^deb(-src)? ([^[])/s/ / [arch=amd64,i386] /' /etc/apt/sources.list
+      shopt -s nullglob
+      for i in /etc/apt/sources.list.d/*.sources
+      do
+        sudo sed -i '
+        /^Components:/{
+          n
+          /^Architectures:/!iArchitectures: amd64 i386
+        }' "$i"
+      done
+      shopt -u nullglob
 
       o="$(mktemp)"
       echo "deb [arch=$ARCH] $url $codename $LIST" >>"$o"
