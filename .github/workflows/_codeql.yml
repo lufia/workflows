@@ -1,0 +1,15 @@
+name: CodeQL for this repository
+on:
+  push:
+    branches:
+    - main
+  pull_request:
+    branches:
+    - main
+  schedule:
+  - cron: '17 2 * * 6'
+jobs:
+  analyze:
+    permissions:
+      contents: read
+    uses: ./.github/workflows/codeql.yml
