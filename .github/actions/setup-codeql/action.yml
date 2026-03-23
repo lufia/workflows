@@ -1,0 +1,25 @@
+name: Install CodeQL
+description: This action installs CodeQL action.
+inputs:
+  language:
+    description: A CodeQL language to analyze.
+    required: true
+  build-mode:
+    description: The build mode that will be used to analyze the language.
+    required: true
+
+runs:
+  using: composite
+  steps:
+  - uses: github/codeql-action/init@0d579ffd059c29b07949a3cce3983f0780820c98 # v4.32.6
+    with:
+      languages: ${{ matrix.language }}
+      build-mode: ${{ matrix.build-mode }}
+  - uses: actions/setup-go@4b73464bb391d4059bd26b0524d20df3927bd417 # v6.3.0
+    with:
+      go-version: stable
+    if: matrix.language == 'go'
+  - uses: actions/setup-node@53b83947a5a98c8d113130e565377fae1a50d02f # v6.3.0
+    with:
+      node-version: latest
+    if: matrix.language == 'javascript-typescript'

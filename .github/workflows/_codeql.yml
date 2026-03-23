@@ -12,7 +12,21 @@ jobs:
   analyze:
     permissions:
       security-events: write
-      packages: read
-      actions: read
-      contents: read
-    uses: ./.github/workflows/codeql.yml
+      # needs for private or internal repositories
+      #contents: read
+    strategy:
+      matrix:
+        language:
+        - actions
+        include:
+        - build-mode: none
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+    - uses: ./.github/actions/setup-codeql
+      with:
+        language: ${{ matrix.language }}
+        build-mode: ${{ matrix.build-mode }}
+    - uses: ./.github/actions/codeql
+      with:
+        language: ${{ matrix.language }}
