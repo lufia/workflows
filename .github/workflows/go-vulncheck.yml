@@ -1,0 +1,10 @@
+name: Vulncheck(Go)
+
+on:
+  workflow_call:
+
+jobs:
+  vuln:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: golang/govulncheck-action@31f7c5463448f83528bd771c2d978d940080c9fd # v1.0.4-1
