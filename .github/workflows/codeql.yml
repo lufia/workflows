@@ -25,6 +25,8 @@ jobs:
     needs: create-matrix
     name: "Always include {language=actions, build-mode=none} object"
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     outputs:
       matrix: ${{ steps.add-default-languages.outputs.result }}
     steps:
