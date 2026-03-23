@@ -10,4 +10,6 @@ on:
   - cron: '17 2 * * 6'
 jobs:
   analyze:
+    permissions:
+      contents: read
     uses: ./.github/workflows/codeql.yml
