@@ -28,5 +28,18 @@ jobs:
     - uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
       with:
         go-version: ${{ matrix.go }}
-    - run: go test -race -covermode=atomic -coverprofile=cover.out ./...
+    - run: |
+        go test -race -covermode=atomic -coverprofile=cover.out ./...
+        if go tool -n gocover-cobertura &>/dev/null
+        then
+          go tool gocover-cobertura <cover.out >cover.xml
+          echo 'cover=cover.xml' >>$GITHUB_OUTPUT
+        fi
       shell: bash
+      id: test
+    - if: steps.test.outputs.cover != ''
+      uses: actions/upload-code-coverage@abb5995db9e0199b0e2bb9dbd136fce4cb1ec4d3 # v1.3.0
+      with:
+        file: ${{ steps.test.outputs.cover }}
+        language: Go
+        label: code-coverage/${{ matrix.os }}_${{ matrix.go }}
